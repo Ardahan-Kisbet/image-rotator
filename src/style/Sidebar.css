@@ -1,0 +1,52 @@
+.sidebar {
+  background-color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Need to arrange mobile and tablet displays 
+  flex-grow can also be used
+*/
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    width: 35%;
+  }
+  .sideBarSectionTop {
+    height: 25%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .sidebar {
+    width: 27.5%;
+  }
+  .sideBarSectionTop {
+    height: 20%;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .sidebar {
+    width: 20%;
+  }
+  .sideBarSectionTop {
+    height: 15%;
+  }
+}
+
+/* sidebar top section area is vertically-center aligned */
+.sideBarSectionTop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sideBarSectionMiddle {
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+/* to ensure whitespaces between labels */
+.sideBarSectionMiddle > span {
+  padding-right: 5px;
+}
