@@ -1,0 +1,15 @@
+{
+  "short_name": "Image Rotator",
+  "name": "Serverless Single Page Image Rotator Application via CRA",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
