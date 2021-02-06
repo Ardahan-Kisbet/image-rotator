@@ -42,16 +42,18 @@ const util = {
     // Else: defensive - not expected to execute in normal run
   },
   Rotate: (angle, setRenderTime) => {
-    // firstly, before rotation we need to keep our original image source to prevent
-    // rotation over already rotated image
-    // so we will reset our image to lastly loaded original one
-    util.Reset();
+    // before rotation we need to keep our original image source to prevent
+    // repetitive rotation over already rotated image
+    // so we will recall our originaly loaded image on each request
+    util.Recall();
 
-    console.log("rotate angle");
     const ctx = util.Canvas.getContext("2d");
     let data = ctx.getImageData(0, 0, util.Canvas.width, util.Canvas.height);
     const start = performance.now();
-    console.log(rotate(data, angle));
+    let result = rotate(data, angle);
+    // Draw image data to the canvas
+    // last two parameters are paddings (start point(x,y) of image), give them as 0
+    ctx.putImageData(result, 0, 0);
     const end = performance.now();
     setRenderTime(end - start);
   },
@@ -64,8 +66,8 @@ const util = {
       util.Canvas.height
     );
   },
-  Reset: () => {
-    // reset to last loaded data
+  Recall: () => {
+    // reset/recall our originaly loaded file
     if (util.BackupData) {
       util.ReDraw(util.BackupData);
     }

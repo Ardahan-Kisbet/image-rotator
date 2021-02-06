@@ -15,15 +15,29 @@
 function rotate(image, angle) {
   let radian = convertToRadian(angle);
 
-  const data = new Uint8ClampedArray(40000);
+  let inverted = inverse(image.data, image.data.length);
 
-  return new ImageData(data, 100, 100);
+  return new ImageData(inverted, image.width, image.height);
 }
 
 // convert given degree to radian
 function convertToRadian(degree) {
   // degree * PI / 180
   return (degree * Math.PI) / 180;
+}
+
+// only for test purposes to make sure everything works as expected
+// inverse given pixel array
+function inverse(pixelArr, length) {
+  const invertedArr = new Uint8ClampedArray(length);
+  // Iterate through every pixel
+  for (let i = 0; i < length; i += 4) {
+    invertedArr[i + 0] = 255 - pixelArr[i + 0]; // R value
+    invertedArr[i + 1] += 255 - pixelArr[i + 1]; // G value
+    invertedArr[i + 2] += 255 - pixelArr[i + 2]; // B value
+    invertedArr[i + 3] = 255; // fully opaque:255 -- complete transparent:0
+  }
+  return invertedArr;
 }
 
 export { rotate };

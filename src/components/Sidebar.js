@@ -17,6 +17,9 @@ function Sidebar(props) {
   }, []);
 
   const triggerFileUpload = () => {
+    // reset previous file value to enable loading same file again and again
+    document.getElementById("imageLoader").value = null;
+
     // trigger input file to open file browser
     document.getElementById("imageLoader").click();
   };
