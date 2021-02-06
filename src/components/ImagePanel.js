@@ -31,9 +31,9 @@ const util = {
   },
   ReDraw: (imageData) => {
     // imageData is an ImageData Object with three members; width, height, data
-    util.BackupData = imageData;
-    util.Clear();
     if (imageData) {
+      util.BackupData = imageData;
+      util.Clear();
       util.Canvas.width = imageData.width;
       util.Canvas.height = imageData.height;
       const ctx = util.Canvas.getContext("2d");
@@ -56,10 +56,12 @@ const util = {
     let end = start;
     try {
       let result = rotate(data, angle);
-      // Draw image data to the canvas
+      end = performance.now();
+      util.Clear();
+      util.Canvas.width = result.width;
+      util.Canvas.height = result.height;
       // last two parameters are paddings (start point(x,y) of image), give them as 0
       ctx.putImageData(result, 0, 0);
-      end = performance.now();
       setRenderTime(end - start);
       setRotateAngle(angle);
     } catch (err) {
