@@ -134,6 +134,14 @@ function Sidebar(props) {
             />
           </span>
         </div>
+        <div className="hoverPointer">
+          <label for="outlineCheckbox">Outlined</label>
+          <input
+            type="checkbox"
+            id="outlineCheckbox"
+            onChange={(e) => props.setOutlined(e.target.checked)}
+          />
+        </div>
       </div>
     </div>
   );

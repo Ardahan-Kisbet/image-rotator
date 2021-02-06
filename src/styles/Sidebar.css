@@ -55,3 +55,7 @@ input {
 .sideBarSectionMiddle div {
   margin-bottom: 10px;
 }
+
+.hoverPointer :hover {
+  cursor: pointer;
+}

@@ -26,6 +26,7 @@ function Content() {
         loadImageData={setLoadedImageData}
         defaultFile={defaultFileInfo}
         tryRotate={tryRotate}
+        setOutlined={setOutlined}
       ></Sidebar>
 
       {/* this component will use loaded image */}
