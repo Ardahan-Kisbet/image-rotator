@@ -41,21 +41,30 @@ const util = {
     }
     // Else: defensive - not expected to execute in normal run
   },
-  Rotate: (angle, setRenderTime) => {
-    // before rotation we need to keep our original image source to prevent
-    // repetitive rotation over already rotated image
-    // so we will recall our originaly loaded image on each request
-    util.Recall();
-
+  Rotate: (angle, setRenderTime, setRotateAngle) => {
+    // to prevent repetitive rotation over already rotated image
+    // we will recall our originaly loaded image data on each request
     const ctx = util.Canvas.getContext("2d");
-    let data = ctx.getImageData(0, 0, util.Canvas.width, util.Canvas.height);
+    let data;
+    if (util.BackupData) {
+      data = util.BackupData;
+    } else {
+      data = ctx.getImageData(0, 0, util.Canvas.width, util.Canvas.height);
+    }
+
     const start = performance.now();
-    let result = rotate(data, angle);
-    // Draw image data to the canvas
-    // last two parameters are paddings (start point(x,y) of image), give them as 0
-    ctx.putImageData(result, 0, 0);
-    const end = performance.now();
-    setRenderTime(end - start);
+    let end = start;
+    try {
+      let result = rotate(data, angle);
+      // Draw image data to the canvas
+      // last two parameters are paddings (start point(x,y) of image), give them as 0
+      ctx.putImageData(result, 0, 0);
+      end = performance.now();
+      setRenderTime(end - start);
+      setRotateAngle(angle);
+    } catch (err) {
+      alert(err.message);
+    }
   },
   Clear: () => {
     // clear canvas
@@ -67,7 +76,7 @@ const util = {
     );
   },
   Recall: () => {
-    // reset/recall our originaly loaded file
+    // recall our originaly loaded file, render canvas
     if (util.BackupData) {
       util.ReDraw(util.BackupData);
     }
@@ -77,6 +86,7 @@ const util = {
 function ImagePanel(props) {
   const [outlined, setOutlined] = useState(true);
   const [renderTime, setRenderTime] = useState(0);
+  const [rotateAngle, setRotateAngle] = useState(0);
   // we have to use a ref, which is a reference to the actual canvas DOM element.
   const canvasRef = useRef(null);
 
@@ -90,14 +100,14 @@ function ImagePanel(props) {
     setOutlined(props.outlined);
   }, [props.outlined]);
 
+  // Re-draw our newly loaded image
   useEffect(() => {
-    // Re-draw our newly loaded image
     util.ReDraw(props.loadedImageData);
   }, [props.loadedImageData]);
 
   useEffect(() => {
     if (!props.rotated) {
-      util.Rotate(props.rotateAngle, setRenderTime);
+      util.Rotate(props.rotateAngle, setRenderTime, setRotateAngle);
       props.setRotated(true);
     }
     // Else: angle received as invalid, do nothing
@@ -111,7 +121,7 @@ function ImagePanel(props) {
         style={{ border: outlined ? "2px solid red" : "none" }}
       />
       <div id="renderTime">Rendered in: {renderTime} miliseconds</div>
-      <div id="roateDegree">Rotated: {props.rotateAngle} degree</div>
+      <div id="roateDegree">Rotated: {rotateAngle} degree</div>
     </div>
   );
 }
