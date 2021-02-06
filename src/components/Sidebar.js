@@ -77,7 +77,7 @@ function Sidebar(props) {
   }
 
   return (
-    <div className="sidebar h-100">
+    <div className="sidebar">
       <div className="sideBarSectionTop">
         <input
           id="uploadImageButton"
