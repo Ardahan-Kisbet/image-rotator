@@ -13,9 +13,17 @@
 
 // Rotates given ImageData regarding given angle
 function rotate(image, angle) {
+  let radian = convertToRadian(angle);
+
   const data = new Uint8ClampedArray(40000);
 
   return new ImageData(data, 100, 100);
+}
+
+// convert given degree to radian
+function convertToRadian(degree) {
+  // degree * PI / 180
+  return (degree * Math.PI) / 180;
 }
 
 export { rotate };

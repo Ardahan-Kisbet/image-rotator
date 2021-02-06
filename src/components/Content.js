@@ -27,6 +27,7 @@ function Content() {
         defaultFile={defaultFileInfo}
         tryRotate={tryRotate}
         setOutlined={setOutlined}
+        outlined={outlined}
       ></Sidebar>
 
       {/* this component will use loaded image */}
