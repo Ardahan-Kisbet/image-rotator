@@ -24,12 +24,14 @@ import { rotate } from "../scripts/imageRotation";
 
 const util = {
   Canvas: null,
+  BackupData: null,
   Init: (canvasRef) => {
     util.Canvas = canvasRef;
     util.Clear();
   },
   ReDraw: (imageData) => {
     // imageData is an ImageData Object with three members; width, height, data
+    util.BackupData = imageData;
     util.Clear();
     if (imageData) {
       util.Canvas.width = imageData.width;
@@ -40,6 +42,11 @@ const util = {
     // Else: defensive - not expected to execute in normal run
   },
   Rotate: (angle, setRenderTime) => {
+    // firstly, before rotation we need to keep our original image source to prevent
+    // rotation over already rotated image
+    // so we will reset our image to lastly loaded original one
+    util.Reset();
+
     console.log("rotate angle");
     const ctx = util.Canvas.getContext("2d");
     let data = ctx.getImageData(0, 0, util.Canvas.width, util.Canvas.height);
@@ -56,6 +63,12 @@ const util = {
       util.Canvas.width,
       util.Canvas.height
     );
+  },
+  Reset: () => {
+    // reset to last loaded data
+    if (util.BackupData) {
+      util.ReDraw(util.BackupData);
+    }
   },
 };
 
@@ -79,13 +92,6 @@ function ImagePanel(props) {
     // Re-draw our newly loaded image
     util.ReDraw(props.loadedImageData);
   }, [props.loadedImageData]);
-
-  // useEffect(() => {
-  //   if (props.rotateAngle) {
-  //     util.Rotate(props.rotateAngle, setRenderTime);
-  //   }
-  //   // Else: angle received as invalid, do nothing
-  // }, [props.rotateAngle]);
 
   useEffect(() => {
     if (!props.rotated) {
