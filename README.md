@@ -1,6 +1,8 @@
-[##Live](https://ardahan-kisbet.github.io/image-rotator/)
+[Live](https://ardahan-kisbet.github.io/image-rotator/)
 
 Serverless Single Page Image Rotator Application
+
+---
 
 ## Setup (development mode)
 
@@ -13,6 +15,8 @@ $ npm start
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+---
 
 ## Setup (production mode)
 
