@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../styles/ImagePanel.css";
+import { rotate } from "../scripts/imageRotation";
+
+// ImagePanel is designed to work with ImageData Object as separated from other concerns
 
 // context.getImageData returns ImageData which is one-dimensional array
 // containing raw pixel data with RGBA format
@@ -20,75 +23,77 @@ import "../styles/ImagePanel.css";
 //    (var i = 0; i < data.length; i += 4)
 
 const util = {
-  Instance: null,
+  Canvas: null,
   Init: (canvasRef) => {
-    util.Instance = canvasRef;
+    util.Canvas = canvasRef;
     util.Clear();
   },
-  ReDraw: (loadedImage) => {
+  ReDraw: (imageData) => {
+    // imageData is an ImageData Object with three members; width, height, data
     util.Clear();
-    if (loadedImage) {
-      const ctx = util.Instance.getContext("2d");
-      ctx.drawImage(
-        loadedImage,
-        0,
-        0,
-        util.Instance.width,
-        util.Instance.height
-      );
-
-      // trying some changes over image data
-      // for test purposes
-      let tempImageData = ctx.getImageData(
-        0,
-        0,
-        util.Instance.width,
-        util.Instance.height
-      );
-      let data = tempImageData.data;
-      for (var i = 0; i < data.length; i += 4) {
-        data[i] = 255 - data[i]; // red
-        data[i + 1] = 255 - data[i + 1]; // green
-        data[i + 2] = 255 - data[i + 2]; // blue
-      }
-      ctx.putImageData(tempImageData, 0, 0);
-      console.log(
-        ctx.getImageData(0, 0, util.Instance.width, util.Instance.height)
-      );
+    if (imageData) {
+      util.Canvas.width = imageData.width;
+      util.Canvas.height = imageData.height;
+      const ctx = util.Canvas.getContext("2d");
+      ctx.putImageData(imageData, 0, 0);
     }
-    // Else: defensive - something went wrong
+    // Else: defensive - not expected to execute in normal run
+  },
+  Rotate: (angle, setRenderTime) => {
+    console.log("rotate angle");
+    const ctx = util.Canvas.getContext("2d");
+    let data = ctx.getImageData(0, 0, util.Canvas.width, util.Canvas.height);
+    const start = performance.now();
+    console.log(rotate(data, angle));
+    const end = performance.now();
+    setRenderTime(end - start);
   },
   Clear: () => {
     // clear canvas
-    util.Instance.getContext("2d").clearRect(
+    util.Canvas.getContext("2d").clearRect(
       0,
       0,
-      util.Instance.width,
-      util.Instance.height
+      util.Canvas.width,
+      util.Canvas.height
     );
   },
-  Rotate: () => {},
 };
 
 function ImagePanel(props) {
   const [outlined, setOutlined] = useState(true);
+  const [renderTime, setRenderTime] = useState(0);
   // we have to use a ref, which is a reference to the actual canvas DOM element.
   const canvasRef = useRef(null);
 
-  // keep an eye on outlined property for border style of our canvas
   useEffect(() => {
-    setOutlined(props.Outlined);
-  }, [props.Outlined]);
-
-  useEffect(() => {
-    // Initialize Canvas Util Instance, this will be called only once
+    // Initialize Util.Canvas, this will be called only once
     util.Init(canvasRef.current);
   }, []);
 
+  // keep an eye on outlined property for border style of our canvas
+  useEffect(() => {
+    setOutlined(props.outlined);
+  }, [props.outlined]);
+
   useEffect(() => {
     // Re-draw our newly loaded image
-    util.ReDraw(props.LoadedImage);
-  }, [props.LoadedImage]);
+    util.ReDraw(props.loadedImageData);
+  }, [props.loadedImageData]);
+
+  // useEffect(() => {
+  //   if (props.rotateAngle) {
+  //     util.Rotate(props.rotateAngle, setRenderTime);
+  //   }
+  //   // Else: angle received as invalid, do nothing
+  // }, [props.rotateAngle]);
+
+  useEffect(() => {
+    if (!props.rotated) {
+      util.Rotate(props.rotateAngle, setRenderTime);
+      props.setRotated(true);
+    }
+    // Else: angle received as invalid, do nothing
+  }, [props]);
 
   return (
     <div className="imageContainer">
@@ -97,7 +102,7 @@ function ImagePanel(props) {
         ref={canvasRef}
         style={{ border: outlined ? "2px solid red" : "none" }}
       />
-      <div id="renderTime">Render Time: HH:MM:SS</div>
+      <div id="renderTime">Render Time: {renderTime} miliseconds</div>
     </div>
   );
 }

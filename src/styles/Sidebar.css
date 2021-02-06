@@ -47,6 +47,11 @@
 }
 
 /* to ensure whitespaces between labels */
-.sideBarSectionMiddle > span {
-  padding-right: 5px;
+.sideBarSectionMiddle span,
+input {
+  margin-right: 5px;
+}
+
+.sideBarSectionMiddle div {
+  margin-bottom: 10px;
 }

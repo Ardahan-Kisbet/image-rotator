@@ -1,28 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import ImagePanel from "./ImagePanel";
 import "../styles/Content.css";
 
+const defaultFileInfo = { name: "default.png", width: 440, height: 250 };
+
 function Content() {
   const [outlined, setOutlined] = useState(true);
-  const [loadedImage, setLoadedImage] = useState(null);
+  const [loadedImageData, setLoadedImageData] = useState(null);
+  const [rotateAngle, setRotateAngle] = useState(null);
+  const [rotated, setRotated] = useState(true);
 
-  // On init give default image as image source
-  useEffect(() => {
-    const image = new Image();
-    image.onload = () => {
-      setLoadedImage(image);
-    };
-    image.src = process.env.PUBLIC_URL + "/default.png";
-  }, []);
+  // callback for rotate angle setting
+  const tryRotate = (angle) => {
+    setRotateAngle(angle);
+    // reset rotated status so that image panel can handle rotation even if same angle is given
+    // so if we are not allowed to rotate over same angle then remove [rotated] state usage
+    setRotated(false);
+  };
 
   return (
     <div className="content">
       {/* this component will set loaded image */}
-      <Sidebar LoadImage={setLoadedImage}></Sidebar>
+      <Sidebar
+        loadImageData={setLoadedImageData}
+        defaultFile={defaultFileInfo}
+        tryRotate={tryRotate}
+      ></Sidebar>
 
       {/* this component will use loaded image */}
-      <ImagePanel LoadedImage={loadedImage} Outlined={outlined}></ImagePanel>
+      <ImagePanel
+        loadedImageData={loadedImageData}
+        outlined={outlined}
+        rotateAngle={rotateAngle}
+        rotated={rotated}
+        setRotated={setRotated}
+      ></ImagePanel>
     </div>
   );
 }
