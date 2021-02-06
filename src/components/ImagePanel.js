@@ -110,7 +110,8 @@ function ImagePanel(props) {
         ref={canvasRef}
         style={{ border: outlined ? "2px solid red" : "none" }}
       />
-      <div id="renderTime">Render Time: {renderTime} miliseconds</div>
+      <div id="renderTime">Rendered in: {renderTime} miliseconds</div>
+      <div id="roateDegree">Rotated: {props.rotateAngle} degree</div>
     </div>
   );
 }

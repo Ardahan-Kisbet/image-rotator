@@ -13,10 +13,15 @@ function Content() {
 
   // callback for rotate angle setting
   const tryRotate = (angle) => {
-    setRotateAngle(angle);
-    // reset rotated status so that image panel can handle rotation even if same angle is given
-    // so if we are not allowed to rotate over same angle then remove [rotated] state usage
-    setRotated(false);
+    let parsed = parseInt(angle);
+    if (!isNaN(parsed) && Number.isInteger(parsed)) {
+      setRotateAngle(parsed);
+      // reset rotated status so that image panel can handle rotation even if same angle is given
+      // so if we are not allowed to rotate over same angle then remove [rotated] state usage completely
+      setRotated(false);
+    } else {
+      alert("Given angle is not a valid number!");
+    }
   };
 
   return (

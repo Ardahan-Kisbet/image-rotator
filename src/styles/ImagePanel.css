@@ -17,3 +17,10 @@
   top: 65px;
   right: 15px;
 }
+
+#roateDegree {
+  position: absolute;
+  z-index: 1;
+  top: 85px;
+  right: 15px;
+}

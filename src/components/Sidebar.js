@@ -125,8 +125,8 @@ function Sidebar(props) {
             <input
               id="inputAngle"
               type="text"
-              maxLength="3"
-              size="3"
+              maxLength="4"
+              size="2"
               onChange={(e) => setAngle(e.target.value)}
             />
             <input
