@@ -3,7 +3,6 @@
 /*
  * # Pixel manipulation reference from MDN
  *   https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
- *   https://github.com/mdn/dom-examples/blob/master/canvas/pixel-manipulation/color-manipulation.js
  *
  * # ImageData creation
  *   give rotated image's width and height as second and third parameter, respectively.
@@ -17,10 +16,11 @@
  *     (x,y) = (col, row) --> index = (x + y * width) * 4 --> ImageData.data[index] (successive 4 index are belong to (x, y) in RGBA order)
  *
  * # Reference for Point Rotation
- *   Well Explained Point Rotation in 2D Coordinate System in regards to Origin (0,0)
+ *   Well Explained Point Rotation in 2D Coordinate System in regards to Origin (0,0) or (a,b)
  *   https://en.wikipedia.org/wiki/Rotation_(mathematics)
  *   https://en.wikipedia.org/wiki/Rotation_matrix
  *   https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+ *   https://developer.apple.com/ [Translation, Rotation, and Scaling: Rotation Around the Center]
  *
  *     theta:  given rotation angle
  *     (x, y) -->  (x', y'):
@@ -61,8 +61,10 @@ function rotate(image, angle) {
   // find new size of image to be created
   const sizeDiff = Math.abs(Math.sin(Math.PI / 2 - radian));
   const sinValue = Math.abs(Math.sin(radian));
-  let newWidth = Math.round(image.width * sizeDiff + image.height * sinValue);
-  let newHeight = Math.round(image.height * sizeDiff + image.width * sinValue);
+  const newWidth = Math.round(image.width * sizeDiff + image.height * sinValue);
+  const newHeight = Math.round(
+    image.height * sizeDiff + image.width * sinValue
+  );
 
   const newPixelArray = new Uint8ClampedArray(newWidth * newHeight * 4);
 

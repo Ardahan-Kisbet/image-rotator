@@ -1,10 +1,28 @@
-[Live](https://ardahan-kisbet.github.io/image-rotator/)
+### Serverless Single Page Image Rotator Application
 
-Serverless Single Page Image Rotator Application
+Upload an image file, give an angle (degree) and click apply!
+
+Give it a try --> [Live](https://ardahan-kisbet.github.io/image-rotator/)
+
+**Approach:**
+Point Rotation with given angle around central origin
+
+```
+    (x, y) -->  (x', y'):
+        x' = ((x-a)*cos(theta) - (y-b)*sin(theta)) + a
+        y' = ((x-a)*sin(theta) + (y-b)*cos(theta)) + b
+```
+
+Used Stack:
+
+- ReactJS (CRA)
+- HTML
+- CSS
+- Javascript
 
 ---
 
-## Setup (development mode)
+### Setup (development mode)
 
 ```
 $ git clone https://github.com/Ardahan-Kisbet/image-rotator DESTINATION_FOLDER
@@ -18,7 +36,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ---
 
-## Setup (production mode)
+### Setup (production mode)
 
 ```
 $ git clone https://github.com/Ardahan-Kisbet/image-rotator DESTINATION_FOLDER
