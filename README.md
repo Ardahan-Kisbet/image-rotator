@@ -15,10 +15,12 @@ Point Rotation with given angle around central origin
 
 Used Stack:
 
+```
 - ReactJS (CRA)
 - HTML
 - CSS
 - Javascript
+```
 
 ---
 

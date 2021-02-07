@@ -23,6 +23,8 @@
  *   https://developer.apple.com/ [Translation, Rotation, and Scaling: Rotation Around the Center]
  *
  *     theta:  given rotation angle
+ 
+ *     Rotating P(x,y) around Origin (0,0):
  *     (x, y) -->  (x', y'):
  *       x' = x*cos(theta) - y*sin(theta)
  *       y' = x*sin(theta) + y*cos(theta)
@@ -117,7 +119,7 @@ function rotate(image, angle) {
 
 /*
  * Rotate given point (x, y) according to given origin and radian degree
- * Rotating over an Origin (a,b)
+ * Rotating around an Origin (a,b)
  *     (x, y) -->  (x', y'):
  *       x' = ((x-a)*cos(theta) - (y-b)*sin(theta)) + a
  *       y' = ((x-a)*sin(theta) + (y-b)*cos(theta)) + b
@@ -131,7 +133,7 @@ function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
     (x - originX) * Math.sin(radian) + (y - originY) * Math.cos(radian);
   yPrime += originY;
 
-  // normalize position if offsets are given
+  // translate position if offsets are given
   xPrime += offsetX;
   yPrime += offsetY;
 
