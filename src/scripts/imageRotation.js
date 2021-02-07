@@ -128,7 +128,6 @@ function rotate(image, angle) {
  */
 function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
   let xPrime = (x - originX) * Math.cos(radian) - (y - originY) * Math.sin(radian) + originX;
-
   let yPrime = (x - originX) * Math.sin(radian) + (y - originY) * Math.cos(radian) + originY;
 
   // translate position if offsets are given
