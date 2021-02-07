@@ -61,13 +61,13 @@ function rotate(image, angle) {
   }
 
   // find new size of image to be created
-  const sizeDiff = Math.abs(Math.sin(Math.PI / 2 - radian));
+  // see my drawing via sketchometry.org under ../public/Rotated Image Size Calculation.png
+  const cosValue = Math.abs(Math.cos(radian));
   const sinValue = Math.abs(Math.sin(radian));
-  const newWidth = Math.round(image.width * sizeDiff + image.height * sinValue);
+  const newWidth = Math.round(image.width * cosValue + image.height * sinValue);
   const newHeight = Math.round(
-    image.height * sizeDiff + image.width * sinValue
+    image.height * cosValue + image.width * sinValue
   );
-
   const newPixelArray = new Uint8ClampedArray(newWidth * newHeight * 4);
 
   // translate position after rotation: using image center
@@ -139,25 +139,15 @@ function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
 
   // round before set since we are working on 2D coordinate system and
   // point positions are needed as integer to build array by indexing correct elements
+  // but as a side effect this is where we lose correct indexing on destination since after rounding
+  // different source pixels will refer to same destination pixels on target, which results white (empty, unassigned) pixel patterns.
+  // Interpolation would be a solution for this: nearest neighbor, bilinear, bicubic
   return { X: Math.round(xPrime), Y: Math.round(yPrime) };
 }
 
 // Converts given degree to radian
 function convertToRadian(degree) {
   return degree * (Math.PI / 180);
-}
-
-// Inverse given pixel array (added for test purposes)
-function inverse(pixelArr, length) {
-  const invertedArr = new Uint8ClampedArray(length);
-  // Iterate through every pixel
-  for (let i = 0; i < length; i += 4) {
-    invertedArr[i + 0] = 255 - pixelArr[i + 0]; // R value
-    invertedArr[i + 1] = 255 - pixelArr[i + 1]; // G value
-    invertedArr[i + 2] = 255 - pixelArr[i + 2]; // B value
-    invertedArr[i + 3] = 255; // fully opaque:255 -- complete transparent:0
-  }
-  return invertedArr;
 }
 
 export { rotate };
