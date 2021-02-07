@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/Sidebar.css";
 
+// 5 MegaByte Limit
+const FILE_SIZE_LIMIT_MB = 5 * 1024;
+
 function Sidebar(props) {
   const [fileName, setFileName] = useState(props.defaultFile.name);
   const [width, setWidth] = useState(props.defaultFile.width);
@@ -25,20 +28,41 @@ function Sidebar(props) {
   };
 
   const tryToLoadImage = (raw) => {
-    if (raw && raw.target.files.length !== 0) {
-      let file = raw.target.files[0];
-      if (file.type.match("image.*")) {
-        // then we have a image, load it!
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function (evt) {
-          if (evt.target.readyState === FileReader.DONE) {
-            load(evt.target.result);
-            setFileName(file.name);
-          }
-        };
-      }
+    // Safety Checks on File Load
+
+    // apparently not all browsers yet supports FileReader
+    if (!window.FileReader) {
+      alert("This browser does not support FileReader.");
+      return;
     }
+
+    if (!raw && raw.target.files.length === 0) {
+      // no file is selected, do nothing
+      console.log("no file is selected, do nothing");
+      return;
+    }
+
+    let file = raw.target.files[0];
+
+    if (!file.type.match("image.*")) {
+      alert("Only images are supported!");
+      return;
+    }
+
+    if (file.size / 1024 > FILE_SIZE_LIMIT_MB) {
+      alert("Maximum allowed size: " + FILE_SIZE_LIMIT_MB / 1024 + " MB");
+      return;
+    }
+
+    // then we have a valid image, load it!
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (evt) {
+      if (evt.target.readyState === FileReader.DONE) {
+        load(evt.target.result);
+        setFileName(file.name);
+      }
+    };
   };
 
   // to load given file source as image
