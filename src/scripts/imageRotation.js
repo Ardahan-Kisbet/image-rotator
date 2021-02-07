@@ -1,44 +1,47 @@
 // Pixel Manipulation for a given ImageData
 
 /*
-# Pixel manipulation reference from MDN
-  https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
-  https://github.com/mdn/dom-examples/blob/master/canvas/pixel-manipulation/color-manipulation.js
+ * # Pixel manipulation reference from MDN
+ *   https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
+ *   https://github.com/mdn/dom-examples/blob/master/canvas/pixel-manipulation/color-manipulation.js
+ *
+ * # ImageData creation
+ *   give rotated image's width and height as second and third parameter, respectively.
+ *   https://developer.mozilla.org/en-US/docs/Web/API/ImageData/ImageData
+ *     array: Uint8ClampedArray
+ *     width
+ *     height
+ *
+ * # ImageData Pixel Indexing
+ *   reaching to a point (pixel) in ImageData.data array:
+ *     (x,y) = (col, row) --> index = (x + y * width) * 4 --> ImageData.data[index] (successive 4 index are belong to (x, y) in RGBA order)
+ *
+ * # Reference for Point Rotation
+ *   Well Explained Point Rotation in 2D Coordinate System in regards to Origin (0,0)
+ *   https://en.wikipedia.org/wiki/Rotation_(mathematics)
+ *   https://en.wikipedia.org/wiki/Rotation_matrix
+ *   https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+ *
+ *     theta:  given rotation angle
+ *     (x, y) -->  (x', y'):
+ *       x' = x*cos(theta) - y*sin(theta)
+ *       y' = x*sin(theta) + y*cos(theta)
+ *
+ *     Rotating around an Origin (a,b) other than default Origin (0,0)
+ *     (x, y) -->  (x', y'):
+ *       x' = ((x-a)*cos(theta) - (y-b)*sin(theta)) + a
+ *       y' = ((x-a)*sin(theta) + (y-b)*cos(theta)) + b
+ *
+ *   x means column
+ *   y means row
+ */
 
-# ImageData creation
-  give rotated image's width and height as second and third parameter, respectively.
-  https://developer.mozilla.org/en-US/docs/Web/API/ImageData/ImageData
-    array: Uint8ClampedArray
-    width
-    height
-
-# ImageData Pixel Indexing
-  reaching to a point (pixel) in ImageData.data array:
-    (x,y) = (col, row) --> index = (x + y * width) * 4 --> ImageData.data[index] (successive 4 index are belong to (x, y) in RGBA order)
-
-# Reference for Point Rotation
-  Well Explained Point Rotation in 2D Coordinate System in regards to Origin (0,0)
-  https://en.wikipedia.org/wiki/Rotation_(mathematics)
-
-  positive angle means counter-clockwise rotation
-  negative angle means clockwise rotation
-  
-    theta:  given rotation angle
-    (x, y) -->  (x', y'): 
-      x' = x*cos(theta) - y*sin(theta)
-      y' = x*sin(theta) + y*cos(theta)
-
-  https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
-  Rotating over Origin (a,b) other than default Origin (0,0)
-    (x, y) -->  (x', y'): 
-      x' = ((x-a)*cos(theta) - (y-b)*sin(theta)) + a
-      y' = ((x-a)*sin(theta) + (y-b)*cos(theta)) + b
-
-  x means column
-  y means row
-*/
-
-// rotates given ImageData regarding given angle
+/*
+ * Rotates given ImageData regarding given angle and image center
+ * ImageData is built-in javascript object type with pixel array in it
+ * Angle is in degree format
+ * Approach: Point Rotation on 2D Coordinate System
+ */
 function rotate(image, angle) {
   // JS Math works with radian
   let radian = convertToRadian(angle);
@@ -63,12 +66,12 @@ function rotate(image, angle) {
 
   const newPixelArray = new Uint8ClampedArray(newWidth * newHeight * 4);
 
-  // normalize position after rotate
+  // translate position after rotation: using image center
   const offsetX = Math.round((newWidth - image.width) / 2);
   const offsetY = Math.round((newHeight - image.height) / 2);
 
-  // We need to rotate our image over center origin
-  // see comment section for details about rotation over a specific origin (a, b)
+  // We need to rotate our image around center origin
+  // see comment section for details about rotation around a specific origin (a, b)
   const originX = Math.round(image.width / 2);
   const originY = Math.round(image.height / 2);
 
@@ -110,7 +113,14 @@ function rotate(image, angle) {
   return new ImageData(newPixelArray, newWidth, newHeight);
 }
 
-// rotate given point (x, y) according to given origin and radian degree
+/*
+ * Rotate given point (x, y) according to given origin and radian degree
+ * Rotating over an Origin (a,b)
+ *     (x, y) -->  (x', y'):
+ *       x' = ((x-a)*cos(theta) - (y-b)*sin(theta)) + a
+ *       y' = ((x-a)*sin(theta) + (y-b)*cos(theta)) + b
+ * offset (X,Y) are optional to translate position after rotation (like canvas.context.translate())
+ */
 function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
   let xPrime =
     (x - originX) * Math.cos(radian) - (y - originY) * Math.sin(radian);
@@ -128,12 +138,12 @@ function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
   return { X: Math.round(xPrime), Y: Math.round(yPrime) };
 }
 
-// convert given degree to radian
+// Converts given degree to radian
 function convertToRadian(degree) {
   return degree * (Math.PI / 180);
 }
 
-// inverse given pixel array (added for test purposes)
+// Inverse given pixel array (added for test purposes)
 function inverse(pixelArr, length) {
   const invertedArr = new Uint8ClampedArray(length);
   // Iterate through every pixel
