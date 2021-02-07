@@ -45,12 +45,9 @@
  * Approach: Point Rotation on 2D Coordinate System
  */
 function rotate(image, angle) {
-  // JS Math works with radian
-  let radian = convertToRadian(angle);
-
   // SAFETY CHECKS
-  // if given angle is 0 | 360 then do not rotate
-  if (Math.abs(radian) === 0) {
+  // if given angle is 0 or 360 degree then do not rotate
+  if (angle % 360 === 0) {
     return image;
   }
   // if given image pixel count is not equal to image.width*image.height then source data is corrupted
@@ -60,51 +57,55 @@ function rotate(image, angle) {
     );
   }
 
+  // JS Math Library works with radian
+  let radian = convertToRadian(angle);
+
   // find new size of image to be created
   // see my drawing via sketchometry.org under ../public/Rotated Image Size Calculation.png
   const cosValue = Math.abs(Math.cos(radian));
   const sinValue = Math.abs(Math.sin(radian));
   const newWidth = Math.round(image.width * cosValue + image.height * sinValue);
-  const newHeight = Math.round(
-    image.height * cosValue + image.width * sinValue
-  );
+  const newHeight = Math.round(image.height * cosValue + image.width * sinValue);
   const newPixelArray = new Uint8ClampedArray(newWidth * newHeight * 4);
 
-  // translate position after rotation: using image center
-  const offsetX = Math.round((newWidth - image.width) / 2);
-  const offsetY = Math.round((newHeight - image.height) / 2);
+  // offset should be calculated to translate newly created image to correct central position
+  // offset is simply half of the differences of both images sizes in both axis
+  const offsetX = Math.round((image.width - newWidth) / 2);
+  const offsetY = Math.round((image.height - newHeight) / 2);
 
   // We need to rotate our image around center origin
   // see comment section for details about rotation around a specific origin (a, b)
-  const originX = Math.round(image.width / 2);
-  const originY = Math.round(image.height / 2);
+  const originX = Math.round(newWidth / 2);
+  const originY = Math.round(newHeight / 2);
 
-  // O(M x N) time complexity where M, N are width and height of source image, respectively
-  for (let y = 0; y < image.height; ++y) {
-    for (let x = 0; x < image.width; ++x) {
+  // O(M x N) time complexity where M, N are width and height of newly created image, respectively
+  for (let y = 0; y < newHeight; ++y) {
+    for (let x = 0; x < newWidth; ++x) {
       // index calculation (refer to comment section: 'ImageData Pixel Indexing')
-      let currIdx = (x + y * image.width) * 4;
+      let destIdx = (x + y * newWidth) * 4;
 
       // X-Prime and Y-Prime calculation (refer to comment section for details)
+      // Be careful about sign of radian. It is passed as negative since we are rotating from destination to source
       let newPoint = rotatePoint(
         x,
         y,
         originX,
         originY,
-        radian,
+        -radian,
         offsetX,
         offsetY
       );
 
-      // check if destination is in valid range
+      // check if calculated new point is corresponds to any pixel on source image
       let inRange =
         newPoint.X >= 0 &&
-        newPoint.X < newWidth &&
+        newPoint.X < image.width &&
         newPoint.Y >= 0 &&
-        newPoint.Y < newHeight;
+        newPoint.Y < image.height;
 
       if (inRange) {
-        let destIdx = (newPoint.X + newPoint.Y * newWidth) * 4;
+        // copy from source to new image
+        let currIdx = (newPoint.X + newPoint.Y * image.width) * 4;
         newPixelArray[destIdx + 0] = image.data[currIdx + 0];
         newPixelArray[destIdx + 1] = image.data[currIdx + 1];
         newPixelArray[destIdx + 2] = image.data[currIdx + 2];
@@ -126,21 +127,17 @@ function rotate(image, angle) {
  * offset (X,Y) are optional to translate position after rotation (like canvas.context.translate())
  */
 function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
-  let xPrime =
-    (x - originX) * Math.cos(radian) - (y - originY) * Math.sin(radian);
-  xPrime += originX;
-  let yPrime =
-    (x - originX) * Math.sin(radian) + (y - originY) * Math.cos(radian);
-  yPrime += originY;
+  let xPrime = (x - originX) * Math.cos(radian) - (y - originY) * Math.sin(radian) + originX;
+
+  let yPrime = (x - originX) * Math.sin(radian) + (y - originY) * Math.cos(radian) + originY;
 
   // translate position if offsets are given
   xPrime += offsetX;
   yPrime += offsetY;
 
   // round before set since we are working on 2D coordinate system and
-  // point positions are needed as integer to build array by indexing correct elements
-  // but as a side effect this is where we lose correct indexing on destination since after rounding
-  // different source pixels will refer to same destination pixels on target, which results white (empty, unassigned) pixel patterns.
+  // point positions are needed as integers to build array by indexing correct elements
+  // but as a side effect this is where we might use same source pixel in more than one place in our new image
   // Interpolation would be a solution for this: nearest neighbor, bilinear, bicubic
   return { X: Math.round(xPrime), Y: Math.round(yPrime) };
 }
