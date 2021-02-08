@@ -36,9 +36,8 @@ function Sidebar(props) {
       return;
     }
 
+    // defensive, no file is selected, do nothing
     if (!raw && raw.target.files.length === 0) {
-      // no file is selected, do nothing
-      console.log("no file is selected, do nothing");
       return;
     }
 
