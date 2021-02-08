@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/image-rotator/static/css/main.23e6ce9f.chunk.css",
-    "main.js": "/image-rotator/static/js/main.6ef6fa52.chunk.js",
-    "main.js.map": "/image-rotator/static/js/main.6ef6fa52.chunk.js.map",
+    "main.css": "/image-rotator/static/css/main.6e1f4f06.chunk.css",
+    "main.js": "/image-rotator/static/js/main.59dfb9c3.chunk.js",
+    "main.js.map": "/image-rotator/static/js/main.59dfb9c3.chunk.js.map",
     "runtime-main.js": "/image-rotator/static/js/runtime-main.a3b4b749.js",
     "runtime-main.js.map": "/image-rotator/static/js/runtime-main.a3b4b749.js.map",
     "static/js/2.90dd3f25.chunk.js": "/image-rotator/static/js/2.90dd3f25.chunk.js",
     "static/js/2.90dd3f25.chunk.js.map": "/image-rotator/static/js/2.90dd3f25.chunk.js.map",
     "index.html": "/image-rotator/index.html",
-    "static/css/main.23e6ce9f.chunk.css.map": "/image-rotator/static/css/main.23e6ce9f.chunk.css.map",
+    "static/css/main.6e1f4f06.chunk.css.map": "/image-rotator/static/css/main.6e1f4f06.chunk.css.map",
     "static/js/2.90dd3f25.chunk.js.LICENSE.txt": "/image-rotator/static/js/2.90dd3f25.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.a3b4b749.js",
     "static/js/2.90dd3f25.chunk.js",
-    "static/css/main.23e6ce9f.chunk.css",
-    "static/js/main.6ef6fa52.chunk.js"
+    "static/css/main.6e1f4f06.chunk.css",
+    "static/js/main.59dfb9c3.chunk.js"
   ]
 }
