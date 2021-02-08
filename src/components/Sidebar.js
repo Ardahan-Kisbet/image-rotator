@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "styles/Sidebar.css";
+import "../styles/Sidebar.css";
 
 // 5 MegaByte Limit
 const FILE_SIZE_LIMIT_MB = 100 * 1024;

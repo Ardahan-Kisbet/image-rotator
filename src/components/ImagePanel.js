@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import "styles/ImagePanel.css";
-import { rotate } from "scripts/imageRotation";
+import "../styles/ImagePanel.css";
+import { rotate } from "../scripts/imageRotation";
 
 // ImagePanel is designed to work with ImageData Object as separated from other concerns
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import ImagePanel from "./ImagePanel";
-import "styles/Content.css";
+import "../styles/Content.css";
 
 const defaultFileInfo = { name: "default.png", width: 440, height: 250 };
 
