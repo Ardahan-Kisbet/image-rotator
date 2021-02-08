@@ -62,7 +62,7 @@ const util = {
       util.Canvas.height = result.height;
       // last two parameters are paddings (start point(x,y) of image), give them as 0
       ctx.putImageData(result, 0, 0);
-      setRenderTime(end - start);
+      setRenderTime(parseFloat(end - start).toFixed(3));
       setRotateAngle(angle);
     } catch (err) {
       alert(err.message);
