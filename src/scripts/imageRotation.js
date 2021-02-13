@@ -112,6 +112,8 @@ function rotate(image, angle) {
         newPixelArray[destIdx + 3] = image.data[currIdx + 3];
       }
       // Else: newPoint is out of range, ignore it
+      // unassigned indexes will be remain as 0 since the contents of Uint8ClampedArray is initialized to 0
+      // 0 means that pixel is transparent (alpha value 0)
     }
   }
 
