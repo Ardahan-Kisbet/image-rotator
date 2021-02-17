@@ -65,7 +65,9 @@ function rotate(image, angle) {
   const cosValue = Math.abs(Math.cos(radian));
   const sinValue = Math.abs(Math.sin(radian));
   const newWidth = Math.round(image.width * cosValue + image.height * sinValue);
-  const newHeight = Math.round(image.height * cosValue + image.width * sinValue);
+  const newHeight = Math.round(
+    image.height * cosValue + image.width * sinValue
+  );
   const newPixelArray = new Uint8ClampedArray(newWidth * newHeight * 4);
 
   // offset should be calculated to translate newly created image to correct central position
@@ -78,6 +80,11 @@ function rotate(image, angle) {
   const originX = Math.round(newWidth / 2);
   const originY = Math.round(newHeight / 2);
 
+  // no need to re-calculate these values every iteration!
+  // Be careful about sign of radian. It is passed as negative since we are rotating from destination to source
+  const sin = Math.sin(-radian);
+  const cos = Math.cos(-radian);
+
   // O(M x N) time complexity where M, N are width and height of newly created image, respectively
   for (let y = 0; y < newHeight; ++y) {
     for (let x = 0; x < newWidth; ++x) {
@@ -85,13 +92,13 @@ function rotate(image, angle) {
       let destIdx = (x + y * newWidth) * 4;
 
       // X-Prime and Y-Prime calculation (refer to comment section for details)
-      // Be careful about sign of radian. It is passed as negative since we are rotating from destination to source
       let newPoint = rotatePoint(
         x,
         y,
         originX,
         originY,
-        -radian,
+        sin,
+        cos,
         offsetX,
         offsetY
       );
@@ -128,9 +135,18 @@ function rotate(image, angle) {
  *       y' = ((x-a)*sin(theta) + (y-b)*cos(theta)) + b
  * offset (X,Y) are optional to translate position after rotation (like canvas.context.translate())
  */
-function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
-  let xPrime = (x - originX) * Math.cos(radian) - (y - originY) * Math.sin(radian) + originX;
-  let yPrime = (x - originX) * Math.sin(radian) + (y - originY) * Math.cos(radian) + originY;
+function rotatePoint(
+  x,
+  y,
+  originX,
+  originY,
+  sin,
+  cos,
+  offsetX = 0,
+  offsetY = 0
+) {
+  let xPrime = (x - originX) * cos - (y - originY) * sin + originX;
+  let yPrime = (x - originX) * sin + (y - originY) * cos + originY;
 
   // translate position if offsets are given
   xPrime += offsetX;
