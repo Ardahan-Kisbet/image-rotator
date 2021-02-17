@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/Sidebar.css";
 
-// 5 MegaByte Limit
-const FILE_SIZE_LIMIT_MB = 100 * 1024;
+// 100 MegaByte Limit
+const FILE_SIZE_LIMIT_KB = 100 * 1024;
 
 function Sidebar(props) {
   const [fileName, setFileName] = useState(props.defaultFile.name);
@@ -48,8 +48,8 @@ function Sidebar(props) {
       return;
     }
 
-    if (file.size / 1024 > FILE_SIZE_LIMIT_MB) {
-      alert("Maximum allowed size: " + FILE_SIZE_LIMIT_MB / 1024 + " MB");
+    if (file.size / 1024 > FILE_SIZE_LIMIT_KB) {
+      alert("Maximum allowed size: " + FILE_SIZE_LIMIT_KB / 1024 + " MB");
       return;
     }
 
