@@ -140,6 +140,7 @@ function rotatePoint(x, y, originX, originY, radian, offsetX = 0, offsetY = 0) {
   // point positions are needed as integers to build array by indexing correct elements
   // but as a side effect this is where we might use same source pixel in more than one place in our new image
   // Interpolation would be a solution for this: nearest neighbor, bilinear, bicubic
+  // Rounding xPrime and yPrime in here means that we are doing nearest neighbor
   return { X: Math.round(xPrime), Y: Math.round(yPrime) };
 }
 
