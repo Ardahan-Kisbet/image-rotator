@@ -46,15 +46,21 @@
  */
 function rotate(image, angle) {
   // SAFETY CHECKS
-  // if given angle is 0 or 360 degree then do not rotate
-  if (angle % 360 === 0) {
-    return image;
+
+  if (!image) {
+    throw new Error("Provided image is corrupted.");
   }
+
   // if given image pixel count is not equal to image.width*image.height then source data is corrupted
   if (image.data.length / 4 !== image.width * image.height) {
     throw new Error(
       "Provided image is corrupted. Length of pixel array is not consistent with image size!"
     );
+  }
+
+  // if given angle is 0 or 360 degree then do not rotate
+  if (angle % 360 === 0) {
+    return image;
   }
 
   // JS Math Library works with radian
